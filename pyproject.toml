@@ -31,7 +31,7 @@ http2 = ["httpx[http2]>=0.27"]
 http3 = ["curl-cffi>=0.7"]
 native = ["httpx[http2]>=0.27", "curl-cffi>=0.7"]
 [project.urls]
-Homepage = "https://neptls-docs.replit.app/"
+Homepage = "https://nep-tls-python-package--khatrieex.replit.app/"
 Repository = "https://github.com/DiwasKhatri07/NepTLS"
 Issues = "https://github.com/DiwasKhatri07/NepTLS/issues"
 

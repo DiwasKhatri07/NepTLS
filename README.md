@@ -10,11 +10,11 @@
   <a href="https://pypi.org/project/neptls/"><img src="https://img.shields.io/pypi/pyversions/neptls?color=2563eb" alt="Python versions" /></a>
   <a href="https://github.com/DiwasKhatri07/NepTLS/actions/workflows/ci.yml"><img src="https://github.com/DiwasKhatri07/NepTLS/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
   <a href="https://github.com/DiwasKhatri07/NepTLS/blob/main/LICENSE"><img src="https://img.shields.io/github/license/DiwasKhatri07/NepTLS?color=14b8a6" alt="MIT license" /></a>
-  <a href="https://neptls-docs.replit.app/"><img src="https://img.shields.io/badge/docs-live-0f766e" alt="Live docs" /></a>
+  <a href="https://nep-tls-python-package--khatrieex.replit.app/"><img src="https://img.shields.io/badge/docs-live-0f766e" alt="Live docs" /></a>
 </p>
 
 <p align="center">
-  <a href="https://neptls-docs.replit.app/">Read the docs</a> ·
+  <a href="https://nep-tls-python-package--khatrieex.replit.app/">Read the docs</a> ·
   <a href="https://pypi.org/project/neptls/">Install from PyPI</a> ·
   <a href="https://github.com/DiwasKhatri07/NepTLS/issues">Open an issue</a>
 </p>
@@ -47,7 +47,7 @@ your platform and dependencies support them.
 
 | Resource | Link |
 | --- | --- |
-| Documentation website | [neptls-docs.replit.app](https://neptls-docs.replit.app/) |
+| Documentation website | [neptls-docs.replit.app](https://nep-tls-python-package--khatrieex.replit.app/) |
 | PyPI package | [neptls 0.4.1](https://pypi.org/project/neptls/) |
 | Canonical repository | [github.com/DiwasKhatri07/NepTLS](https://github.com/DiwasKhatri07/NepTLS) |
 | Releases | [GitHub Releases](https://github.com/DiwasKhatri07/NepTLS/releases) |
@@ -314,7 +314,7 @@ Before opening a pull request, read [CONTRIBUTING.md](CONTRIBUTING.md),
 
 ## Documentation
 
-- **Live docs:** [neptls-docs.replit.app](https://neptls-docs.replit.app/)
+- **Live docs:** [neptls-docs.replit.app](https://nep-tls-python-package--khatrieex.replit.app/)
 - **API guide:** [docs/api.md](docs/api.md)
 - **Practical wiki:** [docs/wiki.md](docs/wiki.md)
 - **Release history:** [CHANGELOG.md](CHANGELOG.md)
