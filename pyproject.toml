@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neptls"
+version = "0.4.1"
+description = "A clear, dependency-light HTTP client and TLS research toolkit for authorized testing."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Diwas Khatri", email = "diwaskhatri07@users.noreply.github.com" }]
+keywords = ["http", "tls", "networking", "diagnostics", "fingerprinting"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Internet :: WWW/HTTP",
+  "Topic :: Security",
+]
+dependencies = []
+
+[project.optional-dependencies]
+http2 = ["httpx[http2]>=0.27"]
+http3 = ["curl-cffi>=0.7"]
+native = ["httpx[http2]>=0.27", "curl-cffi>=0.7"]
+[project.urls]
+Homepage = "https://neptls-docs.replit.app/"
+Repository = "https://github.com/DiwasKhatri07/NepTLS"
+Issues = "https://github.com/DiwasKhatri07/NepTLS/issues"
+
+[project.scripts]
+neptls = "neptls.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+neptls = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
