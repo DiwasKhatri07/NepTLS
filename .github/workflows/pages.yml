@@ -25,11 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Render release announcement as HTML
-        uses: docker://pandoc/core:3.5
-        with:
-          args: docs/blog/neptls-v0.4.1-release.md -o docs/blog/neptls-v0.4.1-release.html --standalone --metadata title="NepTLS v0.4.1 Release"
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
