@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NepTLS v0.4.1 — clear, inspectable HTTP and TLS tooling for Python.">
+  <title>NepTLS v0.4.1 — Release announcement</title>
+  <style>
+    :root { color-scheme: dark; --bg:#06131b; --panel:#0a1d2b; --ink:#ecfeff; --muted:#a5c6d1; --accent:#5eead4; --accent2:#67e8f9; }
+    * { box-sizing:border-box; } body { margin:0; background:radial-gradient(circle at 80% 0%,#164e63 0,transparent 35%),var(--bg); color:var(--ink); font:16px/1.7 Inter,ui-sans-serif,system-ui,sans-serif; }
+    main { max-width:1000px; margin:auto; padding:48px 24px 80px; } .hero { border:1px solid #155e75; border-radius:28px; padding:42px; background:linear-gradient(145deg,#0a1d2b,#082f49); box-shadow:0 24px 80px #0008; }
+    .eyebrow { color:var(--accent); letter-spacing:.14em; text-transform:uppercase; font-size:.78rem; font-weight:700; } h1 { font-size:clamp(2.3rem,7vw,5.4rem); line-height:1; margin:16px 0; letter-spacing:-.07em; } h2 { margin-top:42px; color:var(--accent); } p,li { color:var(--muted); } strong { color:var(--ink); } a { color:var(--accent2); } .buttons { display:flex; flex-wrap:wrap; gap:12px; margin:28px 0 8px; } .button { border:1px solid #2dd4bf; border-radius:999px; padding:10px 18px; text-decoration:none; color:#042f2e; background:var(--accent); font-weight:750; } .button.alt { color:var(--ink); background:transparent; border-color:#28748a; }
+    pre { padding:20px; overflow:auto; border-radius:16px; background:#031017; border:1px solid #164e63; color:#bae6fd; } code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; } .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; } .card { padding:20px; border:1px solid #164e63; border-radius:16px; background:#072235; } .card b { color:var(--accent); display:block; margin-bottom:5px; } footer { margin-top:54px; padding-top:20px; border-top:1px solid #164e63; color:#7ca3b1; }
+  </style>
+</head>
+<body><main>
+  <section class="hero"><div class="eyebrow">NepTLS · v0.4.1</div><h1>See what happened on the wire.</h1><p>A clear, dependency-light HTTP client and TLS research toolkit for Python. Explicit transports, useful diagnostics, and an auditable core for authorized testing.</p><div class="buttons"><a class="button" href="https://pypi.org/project/neptls/">Install from PyPI</a><a class="button alt" href="https://github.com/DiwasKhatri07/NepTLS">View source on GitHub</a></div></section>
+  <h2>Install in seconds</h2><pre><code>python -m pip install --upgrade neptls</code></pre>
+  <h2>Release highlights</h2><div class="grid"><div class="card"><b>Zero-dependency core</b>Portable, inspectable Python networking by default.</div><div class="card"><b>HTTP/2 + HTTP/3</b>Optional native transports with explicit capability checks.</div><div class="card"><b>TLS visibility</b>Configuration, fingerprints, ALPN, certificates, timing, and probes.</div><div class="card"><b>Safe boundary</b>Built for owned systems and authorized research—not bypasses.</div></div>
+  <h2>Try it</h2><pre><code>import neptls
+
+response = neptls.get("https://example.com", impersonate="chrome", timeout=10)
+response.raise_for_status()
+print(response.status_code, response.http_version)</code></pre>
+  <h2>Read the announcement</h2><p>The full <a href="blog/neptls-v0.4.1-release.html">NepTLS v0.4.1 release announcement</a> covers the package, transport model, security boundary, and contribution path.</p>
+  <footer>Maintained by <a href="https://github.com/DiwasKhatri07">Diwas Khatri</a> · <a href="https://pypi.org/project/neptls/">PyPI</a> · <a href="https://github.com/DiwasKhatri07/NepTLS/releases">Releases</a></footer>
+</main></body></html>
