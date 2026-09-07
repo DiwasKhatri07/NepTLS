@@ -49,6 +49,7 @@ your platform and dependencies support them.
 | --- | --- |
 | Documentation website | [neptls-docs.replit.app](https://nep-tls-python-package--khatrieex.replit.app/) |
 | PyPI package | [neptls 0.4.1](https://pypi.org/project/neptls/) |
+| v0.4.1 announcement | [GitHub Pages release post](https://DiwasKhatri07.github.io/NepTLS/blog/neptls-v0.4.1-release.html) |
 | Canonical repository | [github.com/DiwasKhatri07/NepTLS](https://github.com/DiwasKhatri07/NepTLS) |
 | Releases | [GitHub Releases](https://github.com/DiwasKhatri07/NepTLS/releases) |
 | Issues | [GitHub Issues](https://github.com/DiwasKhatri07/NepTLS/issues) |
@@ -315,6 +316,8 @@ Before opening a pull request, read [CONTRIBUTING.md](CONTRIBUTING.md),
 ## Documentation
 
 - **Live docs:** [neptls-docs.replit.app](https://nep-tls-python-package--khatrieex.replit.app/)
+- **Release announcement:** [NepTLS v0.4.1 on GitHub Pages](https://DiwasKhatri07.github.io/NepTLS/blog/neptls-v0.4.1-release.html)
+- **PyPI:** [Install neptls](https://pypi.org/project/neptls/)
 - **API guide:** [docs/api.md](docs/api.md)
 - **Practical wiki:** [docs/wiki.md](docs/wiki.md)
 - **Release history:** [CHANGELOG.md](CHANGELOG.md)
