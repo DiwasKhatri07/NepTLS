@@ -225,6 +225,7 @@ class Client:
         )
         self._native_transport = None
         if self.transport != HTTP1:
+            impersonate_target = self.profile.name if self.profile else None
             try:
                 self._native_transport = create_transport(
                     self.transport,
@@ -235,6 +236,7 @@ class Client:
                     cookies=self.cookies,
                     proxy=proxy,
                     follow_redirects=follow_redirects,
+                    impersonate=impersonate_target,
                 )
             except TransportUnavailableError:
                 if fallback is None:
@@ -257,6 +259,7 @@ class Client:
                         cookies=self.cookies,
                         proxy=proxy,
                         follow_redirects=follow_redirects,
+                        impersonate=impersonate_target,
                     )
         self.fallback_transport = fallback if self.transport != requested_transport else None
         self._tls_config = selected_tls_config

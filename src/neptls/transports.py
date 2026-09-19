@@ -181,7 +181,7 @@ class HTTPXTransport:
 
 
 class CurlHTTP3Transport:
-    """Persistent HTTP/3 transport backed by curl-cffi's native QUIC stack."""
+    """Persistent HTTP/3 transport backed by curl-cffi's native QUIC stack and browser impersonation."""
 
     def __init__(
         self,
@@ -191,6 +191,7 @@ class CurlHTTP3Transport:
         cookies: Any,
         proxy: str | None,
         follow_redirects: bool,
+        impersonate: str | None = None,
     ) -> None:
         try:
             from curl_cffi import requests as curl_requests
@@ -205,12 +206,18 @@ class CurlHTTP3Transport:
                 "the installed libcurl was built without HTTP/3/QUIC support",
             )
 
+        from .profiles import get_curl_cffi_impersonate
+
+        cffi_impersonate = get_curl_cffi_impersonate(impersonate)
+
         options: dict[str, Any] = {
             "verify": verify,
             "headers": dict(headers),
             "cookies": cookies,
             "allow_redirects": follow_redirects,
         }
+        if cffi_impersonate:
+            options["impersonate"] = cffi_impersonate
         if proxy:
             options["proxies"] = {"http": proxy, "https": proxy}
         try:
@@ -265,6 +272,7 @@ def create_transport(
     cookies: Any,
     proxy: str | None,
     follow_redirects: bool,
+    impersonate: str | None = None,
 ) -> HTTPXTransport | CurlHTTP3Transport:
     """Create an optional backend; HTTP/1.1 intentionally uses urllib."""
     normalized = normalize_transport(transport)
@@ -285,5 +293,6 @@ def create_transport(
             cookies=cookies,
             proxy=proxy,
             follow_redirects=follow_redirects,
+            impersonate=impersonate,
         )
     raise ValueError("HTTP/1.1 uses the standard-library transport")
