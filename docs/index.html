@@ -3,25 +3,498 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="NepTLS v0.4.1 — clear, inspectable HTTP and TLS tooling for Python.">
-  <title>NepTLS v0.4.1 — Release announcement</title>
+  <meta name="description" content="NepTLS — Modern, inspectable HTTP client and TLS research toolkit for Python featuring HTTP/2, HTTP/3 QUIC, and full browser impersonation.">
+  <title>NepTLS — Modern HTTP & TLS Toolkit for Python</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: dark; --bg:#06131b; --panel:#0a1d2b; --ink:#ecfeff; --muted:#a5c6d1; --accent:#5eead4; --accent2:#67e8f9; }
-    * { box-sizing:border-box; } body { margin:0; background:radial-gradient(circle at 80% 0%,#164e63 0,transparent 35%),var(--bg); color:var(--ink); font:16px/1.7 Inter,ui-sans-serif,system-ui,sans-serif; }
-    main { max-width:1000px; margin:auto; padding:48px 24px 80px; } .hero { border:1px solid #155e75; border-radius:28px; padding:42px; background:linear-gradient(145deg,#0a1d2b,#082f49); box-shadow:0 24px 80px #0008; }
-    .eyebrow { color:var(--accent); letter-spacing:.14em; text-transform:uppercase; font-size:.78rem; font-weight:700; } h1 { font-size:clamp(2.3rem,7vw,5.4rem); line-height:1; margin:16px 0; letter-spacing:-.07em; } h2 { margin-top:42px; color:var(--accent); } p,li { color:var(--muted); } strong { color:var(--ink); } a { color:var(--accent2); } .buttons { display:flex; flex-wrap:wrap; gap:12px; margin:28px 0 8px; } .button { border:1px solid #2dd4bf; border-radius:999px; padding:10px 18px; text-decoration:none; color:#042f2e; background:var(--accent); font-weight:750; } .button.alt { color:var(--ink); background:transparent; border-color:#28748a; }
-    pre { padding:20px; overflow:auto; border-radius:16px; background:#031017; border:1px solid #164e63; color:#bae6fd; } code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; } .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; } .card { padding:20px; border:1px solid #164e63; border-radius:16px; background:#072235; } .card b { color:var(--accent); display:block; margin-bottom:5px; } footer { margin-top:54px; padding-top:20px; border-top:1px solid #164e63; color:#7ca3b1; }
+    :root {
+      color-scheme: dark;
+      --bg: #030712;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --border: rgba(30, 41, 59, 0.8);
+      --border-glow: rgba(45, 212, 191, 0.3);
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --cyan: #2dd4bf;
+      --cyan-glow: rgba(45, 212, 191, 0.25);
+      --blue: #38bdf8;
+      --purple: #a855f7;
+      --code-bg: #0b0f19;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(45, 212, 191, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 70%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.04) 0%, transparent 50%);
+    }
+
+    /* Animated background glow elements */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: -1;
+      animation: floatOrb 12s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 400px; height: 400px; background: rgba(45, 212, 191, 0.15); top: -100px; left: 10%; }
+    .orb-2 { width: 500px; height: 500px; background: rgba(56, 189, 248, 0.12); top: 300px; right: 5%; animation-delay: -5s; }
+
+    @keyframes floatOrb {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(40px) scale(1.1); }
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(3, 7, 18, 0.75);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030712;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+    .btn-github {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 60px 0 80px;
+      position: relative;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 99px;
+      background: rgba(45, 212, 191, 0.08);
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      color: var(--cyan);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      animation: pulseBorder 3s infinite alternate;
+    }
+    @keyframes pulseBorder {
+      0% { border-color: rgba(45, 212, 191, 0.25); box-shadow: 0 0 10px rgba(45, 212, 191, 0.05); }
+      100% { border-color: rgba(45, 212, 191, 0.6); box-shadow: 0 0 20px rgba(45, 212, 191, 0.2); }
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 4.8rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--blue) 50%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 760px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+    .hero-cta {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #0d9488);
+      color: #030712;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 0 25px var(--cyan-glow);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px rgba(45, 212, 191, 0.4);
+    }
+    .btn-secondary {
+      background: rgba(17, 24, 39, 0.8);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    /* Terminal Showcase */
+    .terminal-wrapper {
+      margin: 60px auto;
+      max-width: 860px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 1px var(--cyan);
+      text-align: left;
+    }
+    .terminal-header {
+      background: rgba(15, 23, 42, 0.8);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+    .terminal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .terminal-body {
+      padding: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+    .token-kw { color: #f472b6; }
+    .token-fn { color: #38bdf8; }
+    .token-str { color: #a3e635; }
+    .token-comment { color: #64748b; font-style: italic; }
+
+    /* Feature Cards */
+    .section-title {
+      text-align: center;
+      margin: 80px 0 40px;
+    }
+    .section-title h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .section-title p { color: var(--muted); margin-top: 8px; }
+
+    .grid-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--cyan-glow);
+    }
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(45, 212, 191, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cyan);
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+    .card p { color: var(--muted); font-size: 0.95rem; }
+
+    /* Impersonation Matrix */
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th, td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: rgba(15, 23, 42, 0.6);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--cyan);
+    }
+    td { font-size: 0.95rem; color: #cbd5e1; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(30, 41, 59, 0.4); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    footer a { color: var(--cyan); text-decoration: none; }
   </style>
 </head>
-<body><main>
-  <section class="hero"><div class="eyebrow">NepTLS · v0.4.1</div><h1>See what happened on the wire.</h1><p>A clear, dependency-light HTTP client and TLS research toolkit for Python. Explicit transports, useful diagnostics, and an auditable core for authorized testing.</p><div class="buttons"><a class="button" href="https://pypi.org/project/neptls/">Install from PyPI</a><a class="button alt" href="https://github.com/DiwasKhatri07/NepTLS">View source on GitHub</a></div></section>
-  <h2>Install in seconds</h2><pre><code>python -m pip install --upgrade neptls</code></pre>
-  <h2>Release highlights</h2><div class="grid"><div class="card"><b>Zero-dependency core</b>Portable, inspectable Python networking by default.</div><div class="card"><b>HTTP/2 + HTTP/3</b>Optional native transports with explicit capability checks.</div><div class="card"><b>TLS visibility</b>Configuration, fingerprints, ALPN, certificates, timing, and probes.</div><div class="card"><b>Safe boundary</b>Built for owned systems and authorized research—not bypasses.</div></div>
-  <h2>Try it</h2><pre><code>import neptls
+<body>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
 
-response = neptls.get("https://example.com", impersonate="chrome", timeout=10)
-response.raise_for_status()
-print(response.status_code, response.http_version)</code></pre>
-  <h2>Read the announcement</h2><p>The full <a href="blog/neptls-v0.4.1-release.html">NepTLS v0.4.1 release announcement</a> covers the package, transport model, security boundary, and contribution path.</p>
-  <footer>Maintained by <a href="https://github.com/DiwasKhatri07">Diwas Khatri</a> · <a href="https://pypi.org/project/neptls/">PyPI</a> · <a href="https://github.com/DiwasKhatri07/NepTLS/releases">Releases</a></footer>
-</main></body></html>
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        NepTLS
+        <span class="logo-badge">v0.4.1</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#impersonation">Impersonation</a></li>
+        <li><a href="https://pypi.org/project/neptls/">PyPI</a></li>
+        <li><a href="https://github.com/DiwasKhatri07/NepTLS">GitHub</a></li>
+      </ul>
+      <a href="https://github.com/DiwasKhatri07/NepTLS" class="btn-github">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Star on GitHub
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-eyebrow">⚡ Next-Gen TLS & HTTP Toolkit</div>
+      <h1>See what happened <span>on the wire.</span></h1>
+      <p>A high-performance, inspectable HTTP client and TLS research engine for Python. Built with standard-library defaults, native HTTP/2, HTTP/3 QUIC, and real browser ClientHello impersonation.</p>
+      <div class="hero-cta">
+        <a href="https://pypi.org/project/neptls/" class="btn-primary">pip install neptls</a>
+        <a href="https://github.com/DiwasKhatri07/NepTLS" class="btn-secondary">View Documentation</a>
+      </div>
+    </section>
+
+    <div class="terminal-wrapper">
+      <div class="terminal-header">
+        <div class="terminal-dots">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="terminal-title">quickstart.py</div>
+      </div>
+      <div class="terminal-body">
+<span class="token-kw">import</span> neptls
+
+<span class="token-comment"># Native HTTP request with browser impersonation & HTTP/2 or HTTP/3 transport</span>
+response = neptls.<span class="token-fn">get</span>(
+    <span class="token-str">"https://httpbin.org/headers"</span>,
+    impersonate=<span class="token-str">"chrome131"</span>,
+    transport=<span class="token-str">"http2"</span>,
+    timeout=10,
+)
+
+response.<span class="token-fn">raise_for_status</span>()
+<span class="token-fn">print</span>(f<span class="token-str">"Status: {response.status_code} | Protocol: {response.http_version}"</span>)
+      </div>
+    </div>
+
+    <section id="features">
+      <div class="section-title">
+        <h2>Engineered for Performance & Visibility</h2>
+        <p>Everything you need for security research, API integration, and networking diagnostics.</p>
+      </div>
+
+      <div class="grid-features">
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>HTTP/2 & HTTP/3 QUIC</h3>
+          <p>Native HTTP/2 via `httpx` and HTTP/3 QUIC via `curl-cffi` with explicit capability checks and non-silent fallback control.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎭</div>
+          <h3>Browser Impersonation</h3>
+          <p>Versioned TLS ClientHello fingerprinting and header hints matching Chrome 131/133, Firefox 133, Edge 131, and Safari 18.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3>TLS Diagnostics</h3>
+          <p>Inspect local TLS configurations, calculate JA3-compatible hashes, probe remote host handshakes, and verify ALPN parameters.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔄</div>
+          <h3>Async Native</h3>
+          <p>`AsyncClient` built with full feature parity, persistent cookie jar state, connection retries, and non-blocking IO.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="impersonation">
+      <div class="section-title">
+        <h2>Browser Impersonation Catalog</h2>
+        <p>Curated targets for accurate research and header compatibility.</p>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Impersonate Target</th>
+              <th>Browser</th>
+              <th>Version</th>
+              <th>Platform</th>
+              <th>Transports</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>chrome131</code> / <code>chrome</code></td>
+              <td>Google Chrome</td>
+              <td>131.0</td>
+              <td>Windows / macOS / Linux</td>
+              <td>HTTP/1.1, HTTP/2, HTTP/3</td>
+            </tr>
+            <tr>
+              <td><code>chrome133</code></td>
+              <td>Google Chrome</td>
+              <td>133.0</td>
+              <td>Windows</td>
+              <td>HTTP/1.1, HTTP/2, HTTP/3</td>
+            </tr>
+            <tr>
+              <td><code>firefox133</code> / <code>firefox</code></td>
+              <td>Mozilla Firefox</td>
+              <td>133.0</td>
+              <td>Linux / Windows</td>
+              <td>HTTP/1.1, HTTP/2, HTTP/3</td>
+            </tr>
+            <tr>
+              <td><code>edge131</code> / <code>edge</code></td>
+              <td>Microsoft Edge</td>
+              <td>131.0</td>
+              <td>Windows</td>
+              <td>HTTP/1.1, HTTP/2, HTTP/3</td>
+            </tr>
+            <tr>
+              <td><code>safari18</code> / <code>safari</code></td>
+              <td>Apple Safari</td>
+              <td>18.1</td>
+              <td>macOS</td>
+              <td>HTTP/1.1, HTTP/2, HTTP/3</td>
+            </tr>
+            <tr>
+              <td><code>safari-ios</code></td>
+              <td>Apple Safari</td>
+              <td>18.1</td>
+              <td>iOS</td>
+              <td>HTTP/1.1, HTTP/2, HTTP/3</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Maintained by <a href="https://github.com/DiwasKhatri07">Diwas Khatri</a> · Released under the MIT License · <a href="https://pypi.org/project/neptls/">PyPI Package</a></p>
+  </footer>
+</body>
+</html>

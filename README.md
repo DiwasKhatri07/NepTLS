@@ -67,15 +67,35 @@ Public repository metrics are refreshed daily by [the metrics workflow](.github/
 ```python
 import neptls
 
+# High-performance request with native browser impersonation
 response = neptls.get(
     "https://example.com",
-    impersonate="chrome",
+    impersonate="chrome131",
+    transport="http2",
     timeout=10,
 )
 
 response.raise_for_status()
-print(response.status_code, response.http_version)
+print(f"Status: {response.status_code} | Protocol: {response.http_version}")
 ```
+
+## Browser Impersonation Catalog
+
+NepTLS features native browser impersonation targets powered by `curl-cffi` and `httpx` adapters:
+
+| Target Name | Browser | Version | Platform | TLS / HTTP/3 Support |
+| --- | --- | --- | --- | --- |
+| `chrome` / `chrome131` | Google Chrome | 131.0 | Windows / macOS / Linux | HTTP/1.1, HTTP/2, HTTP/3 |
+| `chrome133` | Google Chrome | 133.0 | Windows | HTTP/1.1, HTTP/2, HTTP/3 |
+| `chrome124` | Google Chrome | 124.0 | Windows | HTTP/1.1, HTTP/2, HTTP/3 |
+| `chrome120` | Google Chrome | 120.0 | Windows | HTTP/1.1, HTTP/2, HTTP/3 |
+| `firefox` / `firefox133` | Mozilla Firefox | 133.0 | Linux / Windows | HTTP/1.1, HTTP/2, HTTP/3 |
+| `firefox120` | Mozilla Firefox | 120.0 | Windows | HTTP/1.1, HTTP/2, HTTP/3 |
+| `edge` / `edge131` | Microsoft Edge | 131.0 | Windows | HTTP/1.1, HTTP/2, HTTP/3 |
+| `safari` / `safari18` | Apple Safari | 18.1 | macOS | HTTP/1.1, HTTP/2, HTTP/3 |
+| `safari17` | Apple Safari | 17.6 | macOS | HTTP/1.1, HTTP/2, HTTP/3 |
+| `safari-ios` | Apple Safari | 18.1 | iOS | HTTP/1.1, HTTP/2, HTTP/3 |
+| `chrome-android` | Google Chrome | 131.0 | Android | HTTP/1.1, HTTP/2, HTTP/3 |
 
 ## Highlights
 
@@ -83,8 +103,8 @@ print(response.status_code, response.http_version)
 | --- | --- |
 | HTTP | `get`, `post`, `put`, `patch`, `delete`, `head`, `options`, JSON, forms, multipart, streaming |
 | Client state | Reusable clients, cookies, redirects, retries, compression, auth hooks, proxies |
-| Async | `AsyncClient` with the same request model and response conveniences |
-| Browser compatibility | Curated Chrome, Firefox, Edge, Safari, desktop, and mobile profiles |
+| Impersonation | Chrome, Firefox, Edge, Safari, iOS, Android versioned TLS & Client Hints profiles |
+| Async | `AsyncClient` with non-blocking interface and full transport feature parity |
 | TLS | Explicit `TLSConfig`, ALPN, certificate verification, TLS probing, JA3-compatible fields |
 | Transports | Dependency-free HTTP/1.1 plus explicit optional HTTP/2 and HTTP/3 adapters |
 | Diagnostics | DNS, TCP, TLS, HTTP, transport availability, timing, and failure context |
