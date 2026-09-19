@@ -104,3 +104,37 @@ class TransportTests(unittest.TestCase):
                 return client.transport, client.native_transport_available
 
         self.assertEqual(asyncio.run(run()), ("http1", True))
+
+    def test_curl_http3_transport_accepts_impersonate(self):
+        from neptls.transports import CurlHTTP3Transport, create_transport
+        class FakeCurlResponse:
+            status_code = 200
+            reason = "OK"
+            url = "https://example.test/"
+            headers = {}
+            content = b"h3 ok"
+            http_version = "HTTP/3"
+
+        class FakeCurlSession:
+            def __init__(self, **kwargs):
+                self.options = kwargs
+
+            def request(self, *args, **kwargs):
+                return FakeCurlResponse()
+
+            def close(self):
+                pass
+
+        fake_curl = types.SimpleNamespace(Session=FakeCurlSession)
+        fake_cffi = types.SimpleNamespace(requests=fake_curl, CurlHttpVersion=types.SimpleNamespace(V3="HTTP/3"))
+        with patch.dict(sys.modules, {"curl_cffi": fake_cffi, "curl_cffi.requests": fake_curl}):
+            transport = CurlHTTP3Transport(
+                verify=True,
+                headers={},
+                cookies=None,
+                proxy=None,
+                follow_redirects=True,
+                impersonate="chrome131",
+            )
+            self.assertEqual(transport._session.options.get("impersonate"), "chrome131")
+            transport.close()
